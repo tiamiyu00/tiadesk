@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install *)",
+      "Bash(Start-Sleep -Seconds 3)",
+      "Bash(Get-Content \"C:\\\\Users\\\\User\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-User-Documents-CODE-TiaDesk\\\\43e88d97-eba5-4b84-ad01-861f8bf21c49\\\\tasks\\\\bvg7uj26b.output\")",
+      "Bash(ls \"C:\\\\Users\\\\User\\\\.claude\\\\projects\\\\c--Users-User-Documents-CODE-TiaDesk\\\\memory\\\\\" 2>/dev/null || echo \"checking\")",
+      "Read(//c/Users/User/.claude/projects/c--Users-User-Documents-CODE-TiaDesk/memory\" 2>/dev/**)",
+      "Bash(git init *)",
+      "Bash(git add *)"
+    ]
+  }
+}

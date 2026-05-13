@@ -12,7 +12,6 @@ interface TaskModalProps {
 
 export default function TaskModal({ isDark, onClose, onSubmit, editTask, members }: TaskModalProps) {
   const [title, setTitle] = useState(editTask?.title ?? '')
-  const [description, setDescription] = useState(editTask?.description ?? '')
   const [assignee, setAssignee] = useState(editTask?.assignee ?? members[0]?.name ?? '')
   const [reviewer, setReviewer] = useState(editTask?.reviewer ?? members[1]?.name ?? '')
   const [priority, setPriority] = useState<Task['priority']>(editTask?.priority ?? 'Medium')
@@ -50,7 +49,7 @@ export default function TaskModal({ isDark, onClose, onSubmit, editTask, members
     onSubmit({
       id: editTask?.id ?? `t${Date.now()}`,
       title: title.trim(),
-      description,
+      description: editTask?.description ?? '',
       assignee: member.name,
       assigneeInitials: member.initials,
       assigneeColor: member.color,
@@ -66,10 +65,10 @@ export default function TaskModal({ isDark, onClose, onSubmit, editTask, members
   }
 
   return (
-    <Modal isDark={isDark} title={editTask ? 'Edit Task' : 'New Task'} onClose={onClose}>
-      <div style={{ padding: '22px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+    <Modal isDark={isDark} title={editTask ? 'Edit Task' : 'New Task'} onClose={onClose} width="400px">
+      <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
         <div>
-          <label style={label}>Task Title *</label>
+          <label style={label}>Title *</label>
           <input
             style={{ ...inputStyle, borderColor: errors.title ? '#ef4444' : border }}
             value={title}
@@ -80,19 +79,9 @@ export default function TaskModal({ isDark, onClose, onSubmit, editTask, members
           {errors.title && <span style={{ fontSize: '12px', color: '#ef4444', marginTop: '4px', display: 'block' }}>{errors.title}</span>}
         </div>
 
-        <div>
-          <label style={label}>Description</label>
-          <textarea
-            style={{ ...inputStyle, resize: 'vertical', minHeight: '80px', lineHeight: '1.5' }}
-            value={description}
-            onChange={e => setDescription(e.target.value)}
-            placeholder="Describe the task..."
-          />
-        </div>
-
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
           <div>
-            <label style={label}>Assignee *</label>
+            <label style={label}>Assignee</label>
             <select style={{ ...inputStyle, cursor: 'pointer' }} value={assignee} onChange={e => setAssignee(e.target.value)}>
               {members.map(m => (
                 <option key={m.id} value={m.name}>{m.name}</option>
@@ -109,9 +98,9 @@ export default function TaskModal({ isDark, onClose, onSubmit, editTask, members
           </div>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
           <div>
-            <label style={label}>Priority *</label>
+            <label style={label}>Priority</label>
             <select
               style={{ ...inputStyle, cursor: 'pointer' }}
               value={priority}

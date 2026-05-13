@@ -48,6 +48,8 @@ export default function Tasks({ isDark, taskList, members, onAddTask, onUpdateTa
   const [showModal, setShowModal] = useState(false)
   const [selectedTask, setSelectedTask] = useState<Task | null>(null)
   const [editTask, setEditTask] = useState<Task | null>(null)
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [editingTitle, setEditingTitle] = useState('')
 
   const surface = isDark ? '#111111' : '#ffffff'
   const border = isDark ? '#1f1f1f' : '#e5e7eb'
@@ -63,6 +65,19 @@ export default function Tasks({ isDark, taskList, members, onAddTask, onUpdateTa
     setSelectedTask(null)
     setEditTask(task)
     setShowModal(true)
+  }
+
+  const startTitleEdit = (task: Task, e: React.MouseEvent) => {
+    e.stopPropagation()
+    setEditingId(task.id)
+    setEditingTitle(task.title)
+  }
+
+  const commitTitleEdit = (task: Task) => {
+    if (editingTitle.trim() && editingTitle.trim() !== task.title) {
+      onUpdateTask({ ...task, title: editingTitle.trim() })
+    }
+    setEditingId(null)
   }
 
   return (
@@ -153,9 +168,33 @@ export default function Tasks({ isDark, taskList, members, onAddTask, onUpdateTa
                 onMouseLeave={e => e.currentTarget.style.backgroundColor = 'transparent'}
               >
                 <div>
-                  <div style={{ fontSize: '13.5px', fontWeight: 500, color: textPrimary, marginBottom: '3px' }}>
-                    {task.title}
-                  </div>
+                  {editingId === task.id ? (
+                    <input
+                      autoFocus
+                      value={editingTitle}
+                      onChange={e => setEditingTitle(e.target.value)}
+                      onBlur={() => commitTitleEdit(task)}
+                      onKeyDown={e => {
+                        if (e.key === 'Enter') commitTitleEdit(task)
+                        if (e.key === 'Escape') setEditingId(null)
+                      }}
+                      onClick={e => e.stopPropagation()}
+                      style={{
+                        fontSize: '13.5px', fontWeight: 500, color: textPrimary,
+                        background: 'none', border: 'none', outline: 'none',
+                        borderBottom: `1px solid #3b82f6`, width: '100%',
+                        padding: '0 0 2px', fontFamily: 'inherit', marginBottom: '3px',
+                      }}
+                    />
+                  ) : (
+                    <div
+                      style={{ fontSize: '13.5px', fontWeight: 500, color: textPrimary, marginBottom: '3px', cursor: 'text' }}
+                      onDoubleClick={e => startTitleEdit(task, e)}
+                      title="Double-click to rename"
+                    >
+                      {task.title}
+                    </div>
+                  )}
                   <div style={{ fontSize: '11.5px', color: textMuted }}>
                     Owner: {task.owner} · Reviewer: {task.reviewer}
                   </div>

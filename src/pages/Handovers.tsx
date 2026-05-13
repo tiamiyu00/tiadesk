@@ -2,11 +2,12 @@ import { useState } from 'react'
 import { Plus, ChevronRight, Check } from 'lucide-react'
 import Avatar from '../components/Avatar'
 import HandoverModal from '../components/HandoverModal'
-import { type HandoverNote } from '../data/mockData'
+import { type HandoverNote, type TeamMember } from '../data/mockData'
 
 interface HandoversProps {
   isDark: boolean
   handoverList: HandoverNote[]
+  members: TeamMember[]
   onAddHandover: (h: HandoverNote) => void
   onUpdateHandover: (h: HandoverNote) => void
 }
@@ -17,7 +18,7 @@ const statusStyle = {
   Complete: { text: '#16a34a', bg: '#dcfce7', darkBg: 'rgba(34,197,94,0.12)' },
 }
 
-export default function Handovers({ isDark, handoverList, onAddHandover, onUpdateHandover }: HandoversProps) {
+export default function Handovers({ isDark, handoverList, members, onAddHandover, onUpdateHandover }: HandoversProps) {
   const [showModal, setShowModal] = useState(false)
 
   const surface = isDark ? '#111111' : '#ffffff'
@@ -158,6 +159,7 @@ export default function Handovers({ isDark, handoverList, onAddHandover, onUpdat
       {showModal && (
         <HandoverModal
           isDark={isDark}
+          members={members}
           onClose={() => setShowModal(false)}
           onSubmit={(h) => { onAddHandover(h); setShowModal(false) }}
         />

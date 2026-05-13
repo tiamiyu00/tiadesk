@@ -1,10 +1,10 @@
 import { ArrowRight, CheckCircle, AlertCircle, Clock } from 'lucide-react'
 import Avatar from '../components/Avatar'
-import { teamMembers, type Task } from '../data/mockData'
+import { type Task, type TeamMember } from '../data/mockData'
 
-interface WorkflowProps { isDark: boolean; taskList: Task[] }
+interface WorkflowProps { isDark: boolean; taskList: Task[]; members: TeamMember[] }
 
-export default function Workflow({ isDark, taskList }: WorkflowProps) {
+export default function Workflow({ isDark, taskList, members }: WorkflowProps) {
   const surface = isDark ? '#111111' : '#ffffff'
   const border = isDark ? '#1f1f1f' : '#e5e7eb'
   const textPrimary = isDark ? '#fafafa' : '#111827'
@@ -62,7 +62,7 @@ export default function Workflow({ isDark, taskList }: WorkflowProps) {
               {/* Task cards */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 {colTasks.map(task => {
-                  const member = teamMembers.find(m => m.name === task.assignee)
+                  const member = members.find(m => m.name === task.assignee)
                   return (
                     <div key={task.id} style={{
                       backgroundColor: surface, border: `1px solid ${border}`,

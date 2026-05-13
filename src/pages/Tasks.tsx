@@ -3,11 +3,12 @@ import { Plus } from 'lucide-react'
 import Avatar from '../components/Avatar'
 import TaskModal from '../components/TaskModal'
 import TaskDetailPanel from '../components/TaskDetailPanel'
-import { type Task, type TaskStatus, type Priority } from '../data/mockData'
+import { type Task, type TaskStatus, type Priority, type TeamMember } from '../data/mockData'
 
 interface TasksProps {
   isDark: boolean
   taskList: Task[]
+  members: TeamMember[]
   onAddTask: (task: Task) => void
   onUpdateTask: (task: Task) => void
 }
@@ -42,7 +43,7 @@ function ProgressRing({ value }: { value: number }) {
   )
 }
 
-export default function Tasks({ isDark, taskList, onAddTask, onUpdateTask }: TasksProps) {
+export default function Tasks({ isDark, taskList, members, onAddTask, onUpdateTask }: TasksProps) {
   const [filter, setFilter] = useState<'all' | TaskStatus>('all')
   const [showModal, setShowModal] = useState(false)
   const [selectedTask, setSelectedTask] = useState<Task | null>(null)
@@ -193,6 +194,7 @@ export default function Tasks({ isDark, taskList, onAddTask, onUpdateTask }: Tas
       {showModal && (
         <TaskModal
           isDark={isDark}
+          members={members}
           editTask={editTask ?? undefined}
           onClose={() => { setShowModal(false); setEditTask(null) }}
           onSubmit={editTask ? onUpdateTask : onAddTask}

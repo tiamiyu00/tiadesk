@@ -1,19 +1,20 @@
 import { useState } from 'react'
 import Modal from './Modal'
-import { teamMembers, type Task } from '../data/mockData'
+import { type Task, type TeamMember } from '../data/mockData'
 
 interface TaskModalProps {
   isDark: boolean
   onClose: () => void
   onSubmit: (task: Task) => void
   editTask?: Task
+  members: TeamMember[]
 }
 
-export default function TaskModal({ isDark, onClose, onSubmit, editTask }: TaskModalProps) {
+export default function TaskModal({ isDark, onClose, onSubmit, editTask, members }: TaskModalProps) {
   const [title, setTitle] = useState(editTask?.title ?? '')
   const [description, setDescription] = useState(editTask?.description ?? '')
-  const [assignee, setAssignee] = useState(editTask?.assignee ?? teamMembers[0].name)
-  const [reviewer, setReviewer] = useState(editTask?.reviewer ?? teamMembers[1].name)
+  const [assignee, setAssignee] = useState(editTask?.assignee ?? members[0]?.name ?? '')
+  const [reviewer, setReviewer] = useState(editTask?.reviewer ?? members[1]?.name ?? '')
   const [priority, setPriority] = useState<Task['priority']>(editTask?.priority ?? 'Medium')
   const [deadline, setDeadline] = useState(editTask?.deadline ?? '2026-05-20')
   const [errors, setErrors] = useState<Record<string, string>>({})
@@ -45,7 +46,7 @@ export default function TaskModal({ isDark, onClose, onSubmit, editTask }: TaskM
 
   const handleSubmit = () => {
     if (!validate()) return
-    const member = teamMembers.find(m => m.name === assignee) ?? teamMembers[0]
+    const member = members.find(m => m.name === assignee) ?? members[0]
     onSubmit({
       id: editTask?.id ?? `t${Date.now()}`,
       title: title.trim(),
@@ -93,7 +94,7 @@ export default function TaskModal({ isDark, onClose, onSubmit, editTask }: TaskM
           <div>
             <label style={label}>Assignee *</label>
             <select style={{ ...inputStyle, cursor: 'pointer' }} value={assignee} onChange={e => setAssignee(e.target.value)}>
-              {teamMembers.map(m => (
+              {members.map(m => (
                 <option key={m.id} value={m.name}>{m.name}</option>
               ))}
             </select>
@@ -101,7 +102,7 @@ export default function TaskModal({ isDark, onClose, onSubmit, editTask }: TaskM
           <div>
             <label style={label}>Reviewer</label>
             <select style={{ ...inputStyle, cursor: 'pointer' }} value={reviewer} onChange={e => setReviewer(e.target.value)}>
-              {teamMembers.map(m => (
+              {members.map(m => (
                 <option key={m.id} value={m.name}>{m.name}</option>
               ))}
             </select>

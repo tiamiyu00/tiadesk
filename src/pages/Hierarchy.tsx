@@ -1,7 +1,7 @@
 import Avatar from '../components/Avatar'
-import { teamMembers } from '../data/mockData'
+import { type TeamMember } from '../data/mockData'
 
-interface HierarchyProps { isDark: boolean }
+interface HierarchyProps { isDark: boolean; members: TeamMember[] }
 
 const orgTree = {
   id: 'dm', name: 'Daniel M.', role: 'Product Director', color: '#14b8a6', initials: 'DM',
@@ -40,8 +40,6 @@ function NodeCard({ node, isDark, depth = 0 }: { node: OrgNode; isDark: boolean;
   const border = isDark ? '#1f1f1f' : '#e5e7eb'
   const textPrimary = isDark ? '#fafafa' : '#111827'
   const textMuted = isDark ? '#525252' : '#9ca3af'
-  const member = teamMembers.find(m => m.id === node.id)
-
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <div style={{
@@ -63,13 +61,10 @@ function NodeCard({ node, isDark, depth = 0 }: { node: OrgNode; isDark: boolean;
         <div>
           <div style={{ fontSize: '13px', fontWeight: 600, color: textPrimary }}>{node.name}</div>
           <div style={{ fontSize: '11.5px', color: textMuted }}>{node.role}</div>
-          {member && (
-            <div style={{
-              width: '7px', height: '7px', borderRadius: '50%',
-              backgroundColor: member.status === 'Offline' ? '#737373' : '#22c55e',
-              marginTop: '4px',
-            }} />
-          )}
+          <div style={{
+            width: '7px', height: '7px', borderRadius: '50%',
+            backgroundColor: '#22c55e', marginTop: '4px',
+          }} />
         </div>
       </div>
 
@@ -94,7 +89,7 @@ function NodeCard({ node, isDark, depth = 0 }: { node: OrgNode; isDark: boolean;
   )
 }
 
-export default function Hierarchy({ isDark }: HierarchyProps) {
+export default function Hierarchy({ isDark, members: _members }: HierarchyProps) {
   const textPrimary = isDark ? '#fafafa' : '#111827'
   const textSecondary = isDark ? '#a3a3a3' : '#6b7280'
 

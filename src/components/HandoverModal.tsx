@@ -1,15 +1,16 @@
 import { useState } from 'react'
 import Modal from './Modal'
-import { teamMembers, type HandoverNote } from '../data/mockData'
+import { type HandoverNote, type TeamMember } from '../data/mockData'
 
 interface HandoverModalProps {
   isDark: boolean
   onClose: () => void
   onSubmit: (handover: HandoverNote) => void
+  members: TeamMember[]
 }
 
-export default function HandoverModal({ isDark, onClose, onSubmit }: HandoverModalProps) {
-  const [to, setTo] = useState(teamMembers[1].name)
+export default function HandoverModal({ isDark, onClose, onSubmit, members }: HandoverModalProps) {
+  const [to, setTo] = useState(members[1]?.name ?? members[0]?.name ?? '')
   const [task, setTask] = useState('')
   const [notes, setNotes] = useState('')
   const [priority, setPriority] = useState<HandoverNote['priority']>('Medium')
@@ -42,8 +43,8 @@ export default function HandoverModal({ isDark, onClose, onSubmit }: HandoverMod
 
   const handleSubmit = () => {
     if (!validate()) return
-    const fromMember = teamMembers[0]
-    const toMember = teamMembers.find(m => m.name === to) ?? teamMembers[1]
+    const fromMember = members[0]
+    const toMember = members.find(m => m.name === to) ?? members[1]
     onSubmit({
       id: `h${Date.now()}`,
       from: fromMember.name,
@@ -68,7 +69,7 @@ export default function HandoverModal({ isDark, onClose, onSubmit }: HandoverMod
         <div>
           <label style={label}>From (you)</label>
           <div style={{ ...inputStyle, color: textSecondary, border: 'none', backgroundColor: isDark ? '#1a1a1a' : '#f3f4f6' }}>
-            {teamMembers[0].name} — {teamMembers[0].role}
+            {members[0].name} — {members[0].role}
           </div>
         </div>
 
@@ -76,7 +77,7 @@ export default function HandoverModal({ isDark, onClose, onSubmit }: HandoverMod
         <div>
           <label style={label}>Hand Over To *</label>
           <select style={{ ...inputStyle, cursor: 'pointer' }} value={to} onChange={e => setTo(e.target.value)}>
-            {teamMembers.slice(1).map(m => (
+            {members.slice(1).map(m => (
               <option key={m.id} value={m.name}>{m.name} — {m.role}</option>
             ))}
           </select>

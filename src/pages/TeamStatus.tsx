@@ -1,12 +1,12 @@
 import StatusBadge from '../components/StatusBadge'
 import Avatar from '../components/Avatar'
-import { teamMembers, type StatusType } from '../data/mockData'
+import { type StatusType, type TeamMember } from '../data/mockData'
 
-interface TeamStatusProps { isDark: boolean }
+interface TeamStatusProps { isDark: boolean; members: TeamMember[] }
 
 const statusOrder: StatusType[] = ['Active', 'Focus', 'Meeting', 'Blocked', 'Offline']
 
-export default function TeamStatus({ isDark }: TeamStatusProps) {
+export default function TeamStatus({ isDark, members }: TeamStatusProps) {
   const surface = isDark ? '#111111' : '#ffffff'
   const border = isDark ? '#1f1f1f' : '#e5e7eb'
   const textPrimary = isDark ? '#fafafa' : '#111827'
@@ -14,7 +14,7 @@ export default function TeamStatus({ isDark }: TeamStatusProps) {
   const textMuted = isDark ? '#525252' : '#9ca3af'
 
   const counts = statusOrder.reduce((acc, s) => {
-    acc[s] = teamMembers.filter(m => m.status === s).length
+    acc[s] = members.filter(m => m.status === s).length
     return acc
   }, {} as Record<StatusType, number>)
 
@@ -25,7 +25,7 @@ export default function TeamStatus({ isDark }: TeamStatusProps) {
           Team Status
         </h1>
         <p style={{ fontSize: '13px', color: textSecondary }}>
-          {teamMembers.length} members · {counts['Active'] + counts['Focus'] + counts['Meeting']} active now
+          {members.length} members · {counts['Active'] + counts['Focus'] + counts['Meeting']} active now
         </p>
       </div>
 
@@ -63,14 +63,14 @@ export default function TeamStatus({ isDark }: TeamStatusProps) {
           <span>Status</span>
           <span>Contact</span>
         </div>
-        {teamMembers.map((m, i) => (
+        {members.map((m, i) => (
           <div
             key={m.id}
             style={{
               display: 'grid',
               gridTemplateColumns: '2fr 1.5fr 1fr 1fr 1.5fr',
               padding: '14px 20px',
-              borderBottom: i < teamMembers.length - 1 ? `1px solid ${border}` : 'none',
+              borderBottom: i < members.length - 1 ? `1px solid ${border}` : 'none',
               alignItems: 'center',
               cursor: 'pointer',
               transition: 'background 0.12s',
